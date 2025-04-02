@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local properties
+local.properties
+/local.properties
+
+# IntelliJ / Android Studio / JetBrains
+.idea/
+*.iml
+
+# Optional: Exclude only specific .idea files you want
+# .idea/caches
+# .idea/libraries
+# .idea/modules.xml
+# .idea/workspace.xml
+# .idea/navEditor.xml
+# .idea/assetWizardSettings.xml
+
+# macOS
+.DS_Store
+
+# Android captures
+captures/
+
+# C++/NDK
+.externalNativeBuild/
+.cxx/
