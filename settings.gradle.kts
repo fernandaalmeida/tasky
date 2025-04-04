@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tasky"
 include(":app")
- 
+include(":core")
