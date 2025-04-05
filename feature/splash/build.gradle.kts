@@ -1,27 +1,20 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.serialization)
-    id("kotlin-kapt")
     alias(libs.plugins.ksp)
-
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    namespace = "com.falmeida.tasky.core"
+    namespace = "com.falmeida.feature.splash"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.falmeida.tasky.core"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
-        buildToolsVersion = "36.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
     buildFeatures {
         compose = true
@@ -46,18 +39,18 @@ android {
 
 dependencies {
 
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(projects.core)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.compose.foundation)
+    implementation(projects.designsystem)
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    // Hilt DI
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
-    implementation(libs.lifecycle.viewmodel.ktx)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

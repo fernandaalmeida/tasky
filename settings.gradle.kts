@@ -1,3 +1,5 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
         google {
@@ -7,8 +9,8 @@ pluginManagement {
                 includeGroupByRegex("androidx.*")
             }
         }
-        mavenCentral()
         gradlePluginPortal()
+        mavenCentral()
     }
 }
 dependencyResolutionManagement {
@@ -22,3 +24,6 @@ dependencyResolutionManagement {
 rootProject.name = "Tasky"
 include(":app")
 include(":core")
+include(":feature:splash")
+project(":feature:splash").projectDir = file("feature/splash")
+include(":designsystem")
