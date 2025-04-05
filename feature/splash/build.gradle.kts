@@ -42,6 +42,9 @@ dependencies {
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.hilt.navigation.compose)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(projects.core)
     implementation(libs.androidx.activity.compose)

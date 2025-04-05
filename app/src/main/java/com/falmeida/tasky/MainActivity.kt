@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.falmeida.feature.splash.ui.SplashScreen
+import com.falmeida.feature.splash.ui.AdDetailScreenWrapper
 import com.falmeida.tasky.designsystem.component.theme.TaskyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TaskyTheme {
-                SplashScreen()
+                AdDetailScreenWrapper()
             }
         }
     }
