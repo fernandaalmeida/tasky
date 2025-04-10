@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
@@ -13,19 +13,17 @@ android {
     namespace = "com.falmeida.tasky.core"
     compileSdk = 35
 
+
     defaultConfig {
-        applicationId = "com.falmeida.tasky.core"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
-        buildToolsVersion = "36.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildFeatures {
         compose = true
     }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -39,6 +37,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }

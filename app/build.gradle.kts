@@ -42,12 +42,13 @@ android {
 }
 
 dependencies {
+    implementation(projects.core)
+    implementation(projects.designsystem)
 
     implementation(platform(libs.androidx.compose.bom))
-    implementation(projects.designsystem)
-    implementation(projects.feature.splash)
-
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.material3)
     implementation(libs.compose.foundation)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

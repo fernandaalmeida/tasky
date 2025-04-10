@@ -24,6 +24,5 @@ dependencyResolutionManagement {
 rootProject.name = "Tasky"
 include(":app")
 include(":core")
-include(":feature:splash")
-project(":feature:splash").projectDir = file("feature/splash")
 include(":designsystem")
+//include(":feature:auth")

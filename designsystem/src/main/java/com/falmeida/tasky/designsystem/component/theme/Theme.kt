@@ -6,20 +6,28 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-private val LightColors = lightColorScheme(
-    primary = PrimaryLight,
-    secondary = Secondary,
-    surface = SurfaceLight,
-    background = SurfaceHigherLight,
-    tertiary = Tertiary
+val DarkColorScheme = darkColorScheme(
+    primary = TaskyGreen,
+    background = TaskyBlack,
+    surface = TaskyGraySurface,
+    secondary = TaskyWhite,
+    tertiary = TaskyLime,
+    primaryContainer = TaskyGreen30,
+    onPrimary = TaskyBlack,
+    onBackground = TaskyWhite,
+    onSurface = TaskyWhite,
 )
 
-private val DarkColors = darkColorScheme(
-    primary = PrimaryDark,
-    secondary = Secondary,
-    surface = SurfaceDark,
-    background = SurfaceHigherDark,
-    tertiary = Tertiary
+val LightColorScheme = lightColorScheme(
+    primary = TaskyGreen,
+    background = TaskyWhite,
+    surface = TaskyGraySurfaceLight,
+    secondary = TaskyBlack,
+    tertiary = TaskyLime,
+    primaryContainer = TaskyGreen10,
+    onPrimary = TaskyWhite,
+    onBackground = TaskyBlack,
+    onSurface = TaskyBlack,
 )
 
 @Composable
@@ -27,7 +35,7 @@ fun TaskyTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (useDarkTheme) DarkColors else LightColors
+    val colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,

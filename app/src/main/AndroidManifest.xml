@@ -11,18 +11,15 @@
         android:label="tasky"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        tools:targetApi="31" >
-        <provider
-    android:name="androidx.startup.InitializationProvider"
-    android:authorities="${applicationId}.androidx-startup"
-    android:enabled="false"
-    tools:node="remove" />
+        tools:targetApi="31">
+
         <meta-data
-    android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-    tools:node="remove" />
+            android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+            tools:node="remove" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:theme="@style/Theme.Tasky.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
