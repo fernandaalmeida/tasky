@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.Tasky.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- App-wide color settings -->
+        <item name="colorPrimary">@color/tasky_green</item>
+        <item name="colorSecondary">@color/tasky_lime</item>
+
+        <!-- Fallback splash config for pre-API 31 -->
+        <item name="android:windowBackground">@color/tasky_green</item>
+    </style>
+</resources>
