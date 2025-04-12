@@ -5,8 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.material3.Text
+import com.falmeida.tasky.ui.navigation.TaskyNavHost
+import com.falmeida.tasky.feature.auth.ui.register.RegisterScreenWrapper
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
 import com.falmeida.tasky.designsystem.component.theme.TaskyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +27,12 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             TaskyTheme {
-                Text("Loading...")
+                val navController = rememberNavController()
+
+                TaskyNavHost(
+                    navController = navController,
+                    startDestination = "register" // or "login" if skipping splash screen
+                )
             }
         }
     }
