@@ -25,4 +25,4 @@ rootProject.name = "Tasky"
 include(":app")
 include(":core")
 include(":designsystem")
-//include(":feature:auth")
+include(":feature:auth")

@@ -44,7 +44,10 @@ android {
 dependencies {
     implementation(projects.core)
     implementation(projects.designsystem)
+    implementation(projects.feature.auth)
 
+    implementation(libs.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.activity.compose)
@@ -53,6 +56,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)

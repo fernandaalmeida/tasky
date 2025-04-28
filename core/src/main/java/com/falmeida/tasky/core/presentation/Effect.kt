@@ -2,24 +2,27 @@ package com.falmeida.tasky.core.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 
 interface Effect
 @Composable
-fun <T : Effect> HandleEffects(
-    effectFlow: Flow<T>,
-    key: Any? = Unit,
-    content: suspend CoroutineScope.(effect: T) -> Unit // Use suspend for better async handling
+fun <T> ObserveAsEvents(
+    flow: Flow<T>,
+    onEvent: (T) -> Unit
 ) {
-    LaunchedEffect(key1 = key) {
-        try {
-            effectFlow.collectLatest { effect ->
-                content(effect)  // Collect effects
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(flow, lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            withContext(Dispatchers.Main.immediate) {
+                flow.collect(onEvent)
             }
-        } catch (e: Exception) {
-            e.printStackTrace() // Handle exceptions (if any)
         }
     }
 }
