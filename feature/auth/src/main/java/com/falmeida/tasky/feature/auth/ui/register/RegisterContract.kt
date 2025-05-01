@@ -11,15 +11,20 @@ sealed interface RegisterAction : Action {
     data object NavigateToLogin : RegisterAction
 }
 
-sealed interface RegisterEffect {
-    data object NavigateToLogin : RegisterEffect
+sealed class RegisterEffect {
+    data object NavigateToLogin : RegisterEffect()
+    data object NavigateToHome : RegisterEffect()
+    data class ShowError(val message: String) : RegisterEffect()
 }
 
 data class RegisterUiState(
     val name: InputFieldState = InputFieldState(),
     val email: InputFieldState = InputFieldState(),
     val password: PasswordFieldState = PasswordFieldState()
-)
+){
+    val isFormValid: Boolean
+        get() = name.isValid && email.isValid && password.isValid
+}
 
 data class InputFieldState(
     val text: String = "",

@@ -26,7 +26,7 @@ fun InputField(
     value: String,
     onValueChange: (String) -> Unit,
     isValid: Boolean,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     TextField(
         value = value,

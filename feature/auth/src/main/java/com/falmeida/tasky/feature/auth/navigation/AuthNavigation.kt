@@ -9,12 +9,14 @@ import com.falmeida.tasky.feature.auth.ui.register.RegisterScreenWrapper
 fun NavGraphBuilder.authGraph(
     onNavigateToLogin: () -> Unit,
     onNavigateToRegister: () -> Unit,
+    onNavigateToHome: () -> Unit,
+    onShowError: (String) -> Unit, // ✅ Not @Composable
 ) {
     composable(Screen.Login.route) {
         LoginScreenWrapper(onNavigateToRegister = onNavigateToRegister)
     }
 
     composable(Screen.Register.route) {
-        RegisterScreenWrapper(onNavigateToLogin = onNavigateToLogin)
+        RegisterScreenWrapper(onNavigateToLogin = onNavigateToLogin, onShowError = onShowError)
     }
 }

@@ -32,16 +32,18 @@ import com.falmeida.tasky.designsystem.component.theme.TaskyWhite
 
 @Composable
 fun AuthScreenLayout(
+    modifier: Modifier = Modifier,
     title: String,
     bottomText: String,
     clickableText: String,
     buttonText: String,
     onButtonClick: () -> Unit,
     onBottomTextClick: () -> Unit,
+    buttonEnabled: Boolean = true,
     formContent: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(TaskyBlack),
     ) {
@@ -57,12 +59,13 @@ fun AuthScreenLayout(
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 36.dp) // pushes white form down like the mockup
+                .padding(top = 36.dp)
                 .background(
-                    TaskyWhite,
+                    color = TaskyWhite,
                     shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                 )
                 .padding(horizontal = 24.dp, vertical = 32.dp),
@@ -75,13 +78,16 @@ fun AuthScreenLayout(
 
             Button(
                 onClick = onButtonClick,
+                enabled = buttonEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = MaterialTheme.shapes.large,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = TaskyBlack,
-                    contentColor = TaskyWhite
+                    containerColor = if (buttonEnabled) TaskyBlack else TaskyBlack.copy(alpha = 0.3f),
+                    contentColor = TaskyWhite,
+                    disabledContainerColor = TaskyBlack.copy(alpha = 0.3f),
+                    disabledContentColor = TaskyWhite.copy(alpha = 0.5f)
                 )
             ) {
                 Text(buttonText)
@@ -96,7 +102,6 @@ fun AuthScreenLayout(
                 Text(
                     text = bottomText,
                     style = MaterialTheme.typography.labelSmall,
-
                     color = TaskyBlack.copy(alpha = 0.6f)
                 )
                 Spacer(modifier = Modifier.width(4.dp))

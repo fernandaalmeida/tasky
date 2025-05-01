@@ -5,11 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.falmeida.tasky.ui.navigation.TaskyNavHost
-import com.falmeida.tasky.feature.auth.ui.register.RegisterScreenWrapper
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.falmeida.tasky.designsystem.component.theme.TaskyTheme
+import com.falmeida.tasky.ui.navigation.TaskyNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,7 +30,7 @@ class MainActivity : ComponentActivity() {
 
                 TaskyNavHost(
                     navController = navController,
-                    startDestination = "register" // or "login" if skipping splash screen
+                    startDestination = "register" ,
                 )
             }
         }

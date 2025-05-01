@@ -50,6 +50,11 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.retrofit.kotlinx.serialization.converter)
+
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.kotlinx.serialization.json)
 
     // Hilt DI
     implementation(libs.hilt)

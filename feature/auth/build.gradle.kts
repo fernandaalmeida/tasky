@@ -51,8 +51,13 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.compose.foundation)
     implementation(libs.navigation.compose)
+
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit.kotlinx.serialization.converter)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
+
 debugImplementation(libs.androidx.compose.ui.tooling)
     // Hilt DI
     implementation(libs.hilt)
@@ -60,7 +65,17 @@ debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.androidx.test.runner)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.kotlin.test.junit5)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
