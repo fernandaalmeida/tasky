@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.falmeida.tasky.core.domain.TaskyResult
 import com.falmeida.tasky.core.model.RegisterRequest
 import com.falmeida.tasky.core.presentation.ActionHandler
+import com.falmeida.tasky.core.presentation.IDispatcherProvider
 import com.falmeida.tasky.feature.auth.domain.usecase.RegisterUseCase
 import com.falmeida.tasky.feature.auth.domain.validator.IAuthValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val validator: IAuthValidator,
-    private val registerUseCase: RegisterUseCase
+    private val registerUseCase: RegisterUseCase,
+    private val dispatcherProvider: IDispatcherProvider
 ) : ViewModel(), ActionHandler<RegisterAction> {
 
     private val _uiState = MutableStateFlow(RegisterUiState())
@@ -93,7 +95,7 @@ class RegisterViewModel @Inject constructor(
             password = currentState.password.text
         )
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.io) {
             when (val result = registerUseCase(request)) {
                 is TaskyResult.Success -> _effect.send(RegisterEffect.NavigateToHome)
                 is TaskyResult.Error -> _effect.send(RegisterEffect.ShowError(result.message))
