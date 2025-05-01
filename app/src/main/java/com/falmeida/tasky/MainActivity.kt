@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
+import com.falmeida.tasky.core.navigation.Screen
 import com.falmeida.tasky.designsystem.component.theme.TaskyTheme
 import com.falmeida.tasky.ui.navigation.TaskyNavHost
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
                 TaskyNavHost(
                     navController = navController,
-                    startDestination = "register" ,
+                    startDestination = Screen.Login.route ,
                 )
             }
         }

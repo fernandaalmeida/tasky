@@ -16,6 +16,7 @@ interface AuthApi {
         @Body request: RegisterRequest
     ): Response<Unit>
 
+    @POST("login")
     suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
 
     @POST("auth/refresh")

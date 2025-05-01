@@ -13,9 +13,9 @@ class AuthRepository @Inject constructor(
     private val api: AuthApi
 ) : IAuthRepository {
 
-    override suspend fun login(email: String, password: String): TaskyResult<AuthResponse> =
+    override suspend fun login(loginRequest: LoginRequest): TaskyResult<AuthResponse> =
         safeApiCall {
-            api.login(LoginRequest(email, password))
+            api.login(loginRequest)
         }
 
     override suspend fun register(request: RegisterRequest): TaskyResult<Unit> = safeApiCall {
