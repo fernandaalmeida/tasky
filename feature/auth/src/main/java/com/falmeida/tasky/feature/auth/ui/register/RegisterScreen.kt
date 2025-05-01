@@ -17,12 +17,15 @@ import com.falmeida.tasky.feature.auth.ui.register.components.PasswordField
 @Composable
 fun RegisterScreenWrapper(
     viewModel: RegisterViewModel = hiltViewModel(),
-    onNavigateToLogin: () -> Unit = {}
+    onNavigateToLogin: () -> Unit = {},
+    onShowError: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
- ObserveAsEvents(flow = viewModel.effect) { effect ->
+    ObserveAsEvents(flow = viewModel.effect) { effect ->
         when (effect) {
             is RegisterEffect.NavigateToLogin -> onNavigateToLogin()
+            is RegisterEffect.NavigateToHome -> onNavigateToLogin()
+            is RegisterEffect.ShowError -> onShowError(effect.message)
         }
     }
     RegisterScreen(
@@ -42,7 +45,9 @@ fun RegisterScreen(
         bottomText = "ALREADY HAVE AN ACCOUNT?",
         clickableText = "LOG IN",
         buttonText = "GET STARTED",
-        onButtonClick = { onEvent(RegisterAction.Submit) }
+        onButtonClick = { onEvent(RegisterAction.Submit) },
+        buttonEnabled = state.name.isValid && state.email.isValid && state.password.isValid
+
     ) {
         InputField(
             label = "Name",
@@ -57,8 +62,9 @@ fun RegisterScreen(
             value = state.email.text,
             onValueChange = { onEvent(RegisterAction.EnteredEmail(it)) },
             isValid = state.email.isValid,
-            keyboardType = KeyboardType.Email
-        )
+            keyboardType = KeyboardType.Email,
+
+            )
 
         Spacer(modifier = Modifier.height(16.dp))
         PasswordField(
