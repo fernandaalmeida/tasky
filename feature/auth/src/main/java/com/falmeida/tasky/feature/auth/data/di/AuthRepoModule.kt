@@ -1,6 +1,8 @@
 package com.falmeida.tasky.feature.auth.data.di
 
 import com.falmeida.tasky.core.network.auth.AuthApi
+import com.falmeida.tasky.core.presentation.IDispatcherProvider
+import com.falmeida.tasky.core.presentation.StandardDispatcherProvider
 import com.falmeida.tasky.feature.auth.data.repository.AuthRepository
 import com.falmeida.tasky.feature.auth.domain.repository.IAuthRepository
 import dagger.Module
@@ -17,5 +19,11 @@ object AuthModule {
     @Singleton
     fun provideAuthRepository(api: AuthApi): IAuthRepository {
         return AuthRepository(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDispatcher(): IDispatcherProvider {
+        return StandardDispatcherProvider()
     }
 }

@@ -2,6 +2,7 @@ package com.falmeida.tasky.feature.auth.domain.repository
 
 import com.falmeida.tasky.core.domain.TaskyResult
 import com.falmeida.tasky.core.model.AuthResponse
+import com.falmeida.tasky.core.model.LoginRequest
 import com.falmeida.tasky.core.model.RegisterRequest
 
 /**
@@ -11,7 +12,7 @@ interface IAuthRepository {
     /**
      * Logs in a user with the provided email and password.
      */
-    suspend fun login(email: String, password: String): TaskyResult<AuthResponse>
+    suspend fun login(loginRequest: LoginRequest): TaskyResult<AuthResponse>
 
     /**
      * Registers a new user with the provided request.
