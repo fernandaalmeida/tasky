@@ -1,4 +1,10 @@
+package com.falmeida.tasky.feature.auth.ui
+
 import com.falmeida.tasky.core.domain.TaskyResult
+import com.falmeida.tasky.core.model.AuthResponse
+import com.falmeida.tasky.core.model.LoginRequest
+import com.falmeida.tasky.core.model.RegisterRequest
+import com.falmeida.tasky.feature.auth.domain.repository.IAuthRepository
 import com.falmeida.tasky.feature.auth.domain.usecase.RegisterUseCase
 import com.falmeida.tasky.feature.auth.domain.validator.IAuthValidator
 import com.falmeida.tasky.feature.auth.ui.register.RegisterAction
@@ -6,110 +12,102 @@ import com.falmeida.tasky.feature.auth.ui.register.RegisterEffect
 import com.falmeida.tasky.feature.auth.ui.register.RegisterViewModel
 import com.falmeida.testing.rules.MainDispatcherRule
 import com.falmeida.testing.rules.TestDispatcherProvider
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 class RegisterViewModelTest {
 
     @get:Rule
     val dispatcherRule = MainDispatcherRule()
 
-    @MockK
-    lateinit var registerUseCase: RegisterUseCase
-
-    @MockK
-    lateinit var validator: IAuthValidator
-
-    private val testDispatcherProvider = TestDispatcherProvider(dispatcherRule.dispatcher)
-
-    lateinit var viewModel: RegisterViewModel
+    private lateinit var viewModel: RegisterViewModel
+    private lateinit var fakeValidator: FakeValidator
+    private lateinit var fakeRepository: FakeAuthRepository
+    private lateinit var registerUseCase: RegisterUseCase
 
     @Before
     fun setUp() {
-        MockKAnnotations.init(this)
-        viewModel = RegisterViewModel(validator, registerUseCase, testDispatcherProvider)
+        fakeValidator = FakeValidator()
+        fakeRepository = FakeAuthRepository()
+        registerUseCase = RegisterUseCase(fakeRepository)
+
+        viewModel = RegisterViewModel(
+            validator = fakeValidator,
+            registerUseCase = registerUseCase,
+            dispatcherProvider = TestDispatcherProvider(dispatcherRule.dispatcher)
+        )
     }
 
     @Test
     fun `submit with valid data emits NavigateToHome`() = runTest {
-        val builder = ArrangeBuilder()
-            .withValidName(true)
-            .withValidEmail(true)
-            .withValidPassword(true)
-            .withRegisterResult(TaskyResult.Success(Unit))
-            .build()
+        // Arrange
+        fakeValidator.apply {
+            isNameValid = true
+            isEmailValid = true
+            isPasswordValid = true
+        }
+        fakeRepository.registerResult = TaskyResult.Success(Unit)
 
-        builder.viewModel.onAction(RegisterAction.EnteredName("Fernanda"))
-        builder.viewModel.onAction(RegisterAction.EnteredEmail("fernanda@test.com"))
-        builder.viewModel.onAction(RegisterAction.EnteredPassword("Password1"))
-        builder.viewModel.onAction(RegisterAction.Submit)
-        advanceUntilIdle() // ensures all coroutines complete
+        // Act
+        viewModel.onAction(RegisterAction.EnteredName("Fernanda"))
+        viewModel.onAction(RegisterAction.EnteredEmail("fernanda@test.com"))
+        viewModel.onAction(RegisterAction.EnteredPassword("Password1"))
+        viewModel.onAction(RegisterAction.Submit)
 
-        val result = viewModel.effect.first()
-        assertTrue(result is RegisterEffect.NavigateToHome)
+        // Assert
+        val effect = viewModel.effect.first()
+        assertTrue(effect is RegisterEffect.NavigateToHome)
     }
 
     @Test
-    fun `submit with invalid form shows error`() = runTest {
-        val builder = ArrangeBuilder()
-            .withValidName(false)
-            .withValidEmail(false)
-            .withValidPassword(false)
-            .build()
+    fun `submit with invalid form emits ShowError`() = runTest {
+        // Arrange
+        fakeValidator.apply {
+            isNameValid = false
+            isEmailValid = false
+            isPasswordValid = false
+        }
 
-        builder.viewModel.onAction(RegisterAction.EnteredName("A"))
-        builder.viewModel.onAction(RegisterAction.EnteredEmail("invalid"))
-        builder.viewModel.onAction(RegisterAction.EnteredPassword("123"))
+        // Act
+        viewModel.onAction(RegisterAction.EnteredName("A"))
+        viewModel.onAction(RegisterAction.EnteredEmail("bad"))
+        viewModel.onAction(RegisterAction.EnteredPassword("123"))
+        viewModel.onAction(RegisterAction.Submit)
 
-        builder.viewModel.onAction(RegisterAction.Submit)
+        // Assert
+        val effect = viewModel.effect.first()
+        assertTrue(effect is RegisterEffect.ShowError)
+    }
+}
 
-        val result = builder.viewModel.effect.first()
-        assertTrue(result is RegisterEffect.ShowError)
+// ------------------------------------
+// ✅ Fake implementations for testing
+// ------------------------------------
+
+class FakeValidator : IAuthValidator {
+    var isNameValid = true
+    var isEmailValid = true
+    var isPasswordValid = true
+
+    override fun isValidName(name: String) = isNameValid
+    override fun isValidEmail(email: String) = isEmailValid
+    override fun isValidPassword(password: String) = isPasswordValid
+}
+
+class FakeAuthRepository : IAuthRepository {
+    var registerResult: TaskyResult<Unit> = TaskyResult.Success(Unit)
+
+    override suspend fun login(loginRequest: LoginRequest): TaskyResult<AuthResponse> {
+        throw NotImplementedError("Not needed for this test")
     }
 
-    private inner class ArrangeBuilder {
-        private var isNameValid = true
-        private var isEmailValid = true
-        private var isPasswordValid = true
-        private var registerResult: TaskyResult<Unit> = TaskyResult.Success(Unit)
-
-        lateinit var viewModel: RegisterViewModel
-
-        fun withValidName(valid: Boolean) = apply {
-            isNameValid = valid
-        }
-
-        fun withValidEmail(valid: Boolean) = apply {
-            isEmailValid = valid
-        }
-
-        fun withValidPassword(valid: Boolean) = apply {
-            isPasswordValid = valid
-        }
-
-        fun withRegisterResult(result: TaskyResult<Unit>) = apply {
-            registerResult = result
-        }
-
-        fun build(): ArrangeBuilder {
-            every { validator.isValidName(any()) } returns isNameValid
-            every { validator.isValidEmail(any()) } returns isEmailValid
-            every { validator.isValidPassword(any()) } returns isPasswordValid
-            coEvery { registerUseCase(any()) } returns registerResult
-
-            viewModel = RegisterViewModel(validator, registerUseCase, testDispatcherProvider)
-            return this
-        }
+    override suspend fun register(request: RegisterRequest): TaskyResult<Unit> {
+        return registerResult
     }
 }

@@ -1,6 +1,8 @@
 package com.falmeida.tasky.designsystem.component.theme
 
+import android.graphics.Color
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -29,6 +31,11 @@ val LightColorScheme = lightColorScheme(
     onBackground = TaskyBlack,
     onSurface = TaskyBlack,
 )
+val ColorScheme.fabContainer: Color
+    get() = if (isLight) TaskyBlack else TaskyWhite
+
+val ColorScheme.fabContent: Color
+    get() = if (isLight) TaskyWhite else TaskyBlack
 
 @Composable
 fun TaskyTheme(
@@ -42,4 +49,6 @@ fun TaskyTheme(
         typography = TaskyTypography,
         content = content
     )
+
+
 }
