@@ -1,6 +1,6 @@
 package com.falmeida.tasky.feature.home
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,9 +10,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,34 +27,41 @@ class AgendaScreenWrapper(
 ) {
     @Composable
     fun AgendaScreen() {
+        // In a real setup, this could handle ViewModel states and pass down UI state + actions
     }
 }
 
 @Composable
 fun AgendaScreen(
-    agendaState: AgendaState,
+    agendaState: AgendaUiState,
     onAddEventClick: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
 
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            AgendaHeader(currentDate = agendaState.selectedDate)
-            Spacer(modifier = Modifier.height(16.dp))
-            EventList(events = agendaState.events)
-        }
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
 
-        FloatingActionButton(
-            onClick = onAddEventClick,
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = if (isTablet) 48.dp else 0.dp)
+            ) {
+                AgendaHeader(currentDate = agendaState.selectedDate)
+                Spacer(modifier = Modifier.height(16.dp))
+                EventList(events = agendaState.events)
+            }
 
-            containerColor = MaterialTheme.colorScheme.fabContainer,
-            contentColor = MaterialTheme.colorScheme.fabContent,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp)
-        ) {
-            Icon(Icons.Default.Add, contentDescription = "Add")
+            TaskyFloatingActionButton(
+                onClick = onAddEventClick,
+                contentDescription = "Add new event",
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(24.dp)
+            )
         }
     }
 }
@@ -63,23 +72,26 @@ fun AgendaHeader(currentDate: LocalDate) {
         Text(
             text = currentDate.month.name.uppercase(),
             style = TaskyTypography.labelSmall,
-            color = TaskyWhite.copy(alpha = 0.6f)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
         )
         Text(
             text = "Today",
             style = TaskyTypography.headlineLarge.copy(fontSize = 32.sp),
-            color = TaskyWhite,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
     }
 }
 
 @Composable
-fun EventList(events: List<AgendaEvent>) {
+fun EventList(events: List<AgendaUiState>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
+            .semantics {
+                contentDescription = "Agenda event list"
+            }
     ) {
         items(events) { event ->
             EventCard(event)
@@ -90,7 +102,7 @@ fun EventList(events: List<AgendaEvent>) {
 
 @Composable
 fun EventCard(event: AgendaEvent) {
-    val background = when (event.type) {
+    val backgroundColor = when (event.type) {
         EventType.PROJECT -> TaskyGreen
         EventType.MEETING -> TaskyYellow
         EventType.BREAK -> TaskyGray
@@ -98,8 +110,14 @@ fun EventCard(event: AgendaEvent) {
 
     Surface(
         shape = MaterialTheme.shapes.medium,
-        color = background,
-        modifier = Modifier.fillMaxWidth()
+        color = backgroundColor,
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics {
+                contentDescription = "${event.title}, ${event.description}, at ${event.time}"
+                role = Role.Button
+            },
+        tonalElevation = 2.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -110,7 +128,7 @@ fun EventCard(event: AgendaEvent) {
             Text(
                 text = event.description,
                 style = TaskyTypography.bodyMedium,
-                color = TaskyBlack.copy(alpha = 0.7f)
+                color = TaskyBlack.copy(alpha = 0.8f)
             )
             Text(
                 text = "${event.date}, ${event.time}",
@@ -119,24 +137,4 @@ fun EventCard(event: AgendaEvent) {
             )
         }
     }
-}
-
-// Data classes for UI state
-
-data class AgendaState(
-    val selectedDate: LocalDate = LocalDate.now(),
-    val events: List<AgendaEvent> = emptyList()
-)
-
-data class AgendaEvent(
-    val id: String,
-    val title: String,
-    val description: String,
-    val date: LocalDate,
-    val time: LocalTime,
-    val type: EventType
-)
-
-enum class EventType {
-    PROJECT, MEETING, BREAK
 }

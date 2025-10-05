@@ -1,6 +1,5 @@
 package com.falmeida.tasky.designsystem.component.theme
 
-import android.graphics.Color
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -31,11 +30,17 @@ val LightColorScheme = lightColorScheme(
     onBackground = TaskyBlack,
     onSurface = TaskyBlack,
 )
-val ColorScheme.fabContainer: Color
-    get() = if (isLight) TaskyBlack else TaskyWhite
+@Composable
+fun ColorScheme.fabContainerColor(): androidx.compose.ui.graphics.Color {
+    val isDark = isSystemInDarkTheme()
+    return if (isDark) TaskyWhite else TaskyBlack
+}
 
-val ColorScheme.fabContent: Color
-    get() = if (isLight) TaskyWhite else TaskyBlack
+@Composable
+fun ColorScheme.fabContentColor(): androidx.compose.ui.graphics.Color {
+    val isDark = isSystemInDarkTheme()
+    return if (isDark) TaskyBlack else TaskyWhite
+}
 
 @Composable
 fun TaskyTheme(
